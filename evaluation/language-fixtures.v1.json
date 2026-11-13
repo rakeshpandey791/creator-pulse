@@ -1,0 +1,301 @@
+{
+  "version": "lang-02-v1",
+  "targetDurationSeconds": { "min": 30, "max": 60 },
+  "thresholds": {
+    "goldenLanguagePassRate": 1,
+    "mixedLanguageFlagRate": 1,
+    "unsupportedClaimReviewRate": 1,
+    "durationComplianceRate": 1,
+    "humanReviewPassRate": 1
+  },
+  "goldenCases": [
+    {
+      "id": "hi-fitness-yt-01",
+      "language": "hi",
+      "niche": "fitness",
+      "platform": "youtube_shorts",
+      "prompt": "Create a 45-second beginner fitness tip about warming up.",
+      "output": "शुरुआत करने से पहले शरीर को तैयार करना बहुत ज़रूरी है। केवल तीस सेकंड की हल्की जॉगिंग से शुरुआत करें। फिर कंधों, कलाई और टखनों को धीरे-धीरे घुमाएँ। इससे शरीर में गर्माहट आती है और चोट का जोखिम कम हो सकता है। वार्म-अप को कभी भी जल्दी में न छोड़ें।",
+      "detectedLanguage": "hi",
+      "expectedScript": "Devanagari",
+      "durationSeconds": 45,
+      "safetyFlags": [],
+      "unsupportedClaim": false
+    },
+    {
+      "id": "hinglish-food-inst-01",
+      "language": "hinglish",
+      "niche": "food",
+      "platform": "instagram_reels",
+      "prompt": "Create a 45-second food reel about a quick breakfast idea.",
+      "output": "Aaj ka breakfast idea super simple hai. Ek bowl mein oats, dahi aur chopped fruit add karo. Thoda sa honey daalo, mix karo, aur five minutes ke liye rest karne do. Isse morning routine easy ho jaata hai. Taste ke liye nuts add kar sakte ho, but apni preference ke hisaab se portion rakho.",
+      "detectedLanguage": "hinglish",
+      "expectedScript": "Latin",
+      "durationSeconds": 45,
+      "safetyFlags": [],
+      "unsupportedClaim": false
+    },
+    {
+      "id": "bho-finance-fb-01",
+      "language": "bho",
+      "niche": "finance",
+      "platform": "facebook_reels",
+      "prompt": "Create a 45-second Bhojpuri explainer about budgeting.",
+      "output": "रउआ कमाई के तीन हिस्सा में बाँट सकत बानी। पहिला हिस्सा जरूरी खर्चा खातिर, दुसरा बचत खातिर आ तिसरा अपना मन के छोट खर्चा खातिर। हर महीना खर्च लिखल शुरू करीं। एहसे पता चली कि पैसा कहाँ जा रहल बा आ अगिला महीना के योजना बनावल आसान होई।",
+      "detectedLanguage": "bho",
+      "expectedScript": "Devanagari",
+      "durationSeconds": 45,
+      "safetyFlags": [],
+      "unsupportedClaim": false
+    },
+    {
+      "id": "pa-education-yt-01",
+      "language": "pa",
+      "niche": "education",
+      "platform": "youtube_shorts",
+      "prompt": "Create a 45-second Punjabi study tip.",
+      "output": "ਪੜ੍ਹਾਈ ਸ਼ੁਰੂ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਅੱਜ ਦਾ ਇੱਕ ਛੋਟਾ ਟੀਚਾ ਲਿਖੋ। ਪੱਚੀ ਮਿੰਟ ਲਈ ਸਿਰਫ਼ ਇੱਕ ਵਿਸ਼ੇ ਉੱਤੇ ਧਿਆਨ ਦਿਓ ਅਤੇ ਫਿਰ ਪੰਜ ਮਿੰਟ ਦਾ ਵਿਰਾਮ ਲਓ। ਫੋਨ ਨੂੰ ਦੂਰ ਰੱਖਣ ਨਾਲ ਧਿਆਨ ਬਣਿਆ ਰਹਿੰਦਾ ਹੈ। ਦਿਨ ਦੇ ਅਖੀਰ ਵਿੱਚ ਆਪਣੀ ਤਰੱਕੀ ਨੂੰ ਜ਼ਰੂਰ ਵੇਖੋ।",
+      "detectedLanguage": "pa",
+      "expectedScript": "Gurmukhi",
+      "durationSeconds": 45,
+      "safetyFlags": [],
+      "unsupportedClaim": false
+    },
+    {
+      "id": "bgc-entertainment-inst-01",
+      "language": "bgc",
+      "niche": "entertainment",
+      "platform": "instagram_reels",
+      "prompt": "Create a 45-second Haryanvi comedy setup about daily routines.",
+      "output": "राम राम, के हाल सै? सुबह अलार्म पांच बजे का हो सै, पर आंख खुलती है नौ बजे। फिर घर वाले पूछें, आज जल्दी उठना था ना? मन्नै कह दिया, उठ तो गया था, बस आंख बंद करके सोच रहा था। असली समस्या अलार्म की ना, अपनी नींद की सै।",
+      "detectedLanguage": "bgc",
+      "expectedScript": "Devanagari",
+      "durationSeconds": 45,
+      "safetyFlags": [],
+      "unsupportedClaim": false
+    },
+    {
+      "id": "te-lifestyle-fb-01",
+      "language": "te",
+      "niche": "lifestyle",
+      "platform": "facebook_reels",
+      "prompt": "Create a 45-second Telugu lifestyle tip about a calmer morning.",
+      "output": "ఉదయం లేచిన వెంటనే ఫోన్ చూడకుండా ఐదు నిమిషాలు ప్రశాంతంగా కూర్చోండి. ఒక గ్లాసు నీరు తాగి, ఆ రోజు చేయాల్సిన మూడు పనులను రాసుకోండి. చిన్న ప్రణాళికతో మొదలుపెడితే ఉదయం తొందర తగ్గుతుంది. మీకు సరిపోయే వేగంతో రోజును ప్రారంభించండి.",
+      "detectedLanguage": "te",
+      "expectedScript": "Telugu",
+      "durationSeconds": 45,
+      "safetyFlags": [],
+      "unsupportedClaim": false
+    },
+    {
+      "id": "kn-fitness-yt-01",
+      "language": "kn",
+      "niche": "fitness",
+      "platform": "youtube_shorts",
+      "prompt": "Create a 45-second Kannada mobility tip.",
+      "output": "ವ್ಯಾಯಾಮದ ಮೊದಲು ದೇಹವನ್ನು ನಿಧಾನವಾಗಿ ಚಲಿಸುವಂತೆ ಮಾಡುವುದು ಒಳ್ಳೆಯದು. ಕುತ್ತಿಗೆ, ಭುಜ ಮತ್ತು ಕಾಲುಗಳನ್ನು ನೋವು ಇಲ್ಲದ ಮಿತಿಯಲ್ಲಿ ಚಲಿಸಿ. ಪ್ರತಿಯೊಂದು ಚಲನೆಯನ್ನು ಕೆಲವು ಸೆಕೆಂಡುಗಳ ಕಾಲ ಮಾಡಿ. ನೋವು ಕಂಡುಬಂದರೆ ನಿಲ್ಲಿಸಿ ಮತ್ತು ಅಗತ್ಯವಿದ್ದರೆ ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ.",
+      "detectedLanguage": "kn",
+      "expectedScript": "Kannada",
+      "durationSeconds": 45,
+      "safetyFlags": [],
+      "unsupportedClaim": false
+    }
+  ],
+  "regressionCases": [
+    {
+      "id": "mixed-hinglish-01",
+      "language": "hinglish",
+      "output": "Aaj ka idea अच्छा है, isko short reel mein try karo.",
+      "expectedMixedLanguage": true,
+      "expectedScriptMismatch": false
+    },
+    {
+      "id": "unsupported-claim-finance-01",
+      "language": "hi",
+      "output": "यह निवेश पक्का है और हर महीने सौ प्रतिशत मुनाफा देगा।",
+      "expectedUnsupportedClaim": true,
+      "requiredReviewFlag": "unsupported_claim"
+    },
+    {
+      "id": "duration-too-long-01",
+      "language": "te",
+      "output": "ఈ స్క్రిప్ట్ తనిఖీ కోసం ఉద్దేశపూర్వకంగా ఎక్కువగా ఉంది.",
+      "durationSeconds": 75,
+      "expectedDurationCompliant": false
+    }
+  ],
+  "humanReview": {
+    "scale": "1-5",
+    "dimensions": [
+      "language_fidelity",
+      "naturalness",
+      "platform_fit",
+      "safety",
+      "unsupported_claims"
+    ],
+    "minimumScore": 4,
+    "reviewersRequired": 2,
+    "scores": [
+      {
+        "caseId": "hi-fitness-yt-01",
+        "reviewerId": "native-hi-1",
+        "scores": {
+          "language_fidelity": 5,
+          "naturalness": 5,
+          "platform_fit": 4,
+          "safety": 5,
+          "unsupported_claims": 5
+        }
+      },
+      {
+        "caseId": "hi-fitness-yt-01",
+        "reviewerId": "native-hi-2",
+        "scores": {
+          "language_fidelity": 4,
+          "naturalness": 4,
+          "platform_fit": 4,
+          "safety": 4,
+          "unsupported_claims": 4
+        }
+      },
+      {
+        "caseId": "hinglish-food-inst-01",
+        "reviewerId": "native-hinglish-1",
+        "scores": {
+          "language_fidelity": 5,
+          "naturalness": 5,
+          "platform_fit": 5,
+          "safety": 4,
+          "unsupported_claims": 5
+        }
+      },
+      {
+        "caseId": "hinglish-food-inst-01",
+        "reviewerId": "native-hinglish-2",
+        "scores": {
+          "language_fidelity": 4,
+          "naturalness": 4,
+          "platform_fit": 4,
+          "safety": 4,
+          "unsupported_claims": 4
+        }
+      },
+      {
+        "caseId": "bho-finance-fb-01",
+        "reviewerId": "native-bho-1",
+        "scores": {
+          "language_fidelity": 5,
+          "naturalness": 4,
+          "platform_fit": 4,
+          "safety": 5,
+          "unsupported_claims": 5
+        }
+      },
+      {
+        "caseId": "bho-finance-fb-01",
+        "reviewerId": "native-bho-2",
+        "scores": {
+          "language_fidelity": 4,
+          "naturalness": 4,
+          "platform_fit": 4,
+          "safety": 4,
+          "unsupported_claims": 4
+        }
+      },
+      {
+        "caseId": "pa-education-yt-01",
+        "reviewerId": "native-pa-1",
+        "scores": {
+          "language_fidelity": 5,
+          "naturalness": 5,
+          "platform_fit": 4,
+          "safety": 5,
+          "unsupported_claims": 5
+        }
+      },
+      {
+        "caseId": "pa-education-yt-01",
+        "reviewerId": "native-pa-2",
+        "scores": {
+          "language_fidelity": 4,
+          "naturalness": 4,
+          "platform_fit": 4,
+          "safety": 4,
+          "unsupported_claims": 4
+        }
+      },
+      {
+        "caseId": "bgc-entertainment-inst-01",
+        "reviewerId": "native-bgc-1",
+        "scores": {
+          "language_fidelity": 5,
+          "naturalness": 5,
+          "platform_fit": 5,
+          "safety": 5,
+          "unsupported_claims": 5
+        }
+      },
+      {
+        "caseId": "bgc-entertainment-inst-01",
+        "reviewerId": "native-bgc-2",
+        "scores": {
+          "language_fidelity": 4,
+          "naturalness": 4,
+          "platform_fit": 4,
+          "safety": 4,
+          "unsupported_claims": 4
+        }
+      },
+      {
+        "caseId": "te-lifestyle-fb-01",
+        "reviewerId": "native-te-1",
+        "scores": {
+          "language_fidelity": 5,
+          "naturalness": 5,
+          "platform_fit": 4,
+          "safety": 5,
+          "unsupported_claims": 5
+        }
+      },
+      {
+        "caseId": "te-lifestyle-fb-01",
+        "reviewerId": "native-te-2",
+        "scores": {
+          "language_fidelity": 4,
+          "naturalness": 4,
+          "platform_fit": 4,
+          "safety": 4,
+          "unsupported_claims": 4
+        }
+      },
+      {
+        "caseId": "kn-fitness-yt-01",
+        "reviewerId": "native-kn-1",
+        "scores": {
+          "language_fidelity": 5,
+          "naturalness": 5,
+          "platform_fit": 4,
+          "safety": 5,
+          "unsupported_claims": 5
+        }
+      },
+      {
+        "caseId": "kn-fitness-yt-01",
+        "reviewerId": "native-kn-2",
+        "scores": {
+          "language_fidelity": 4,
+          "naturalness": 4,
+          "platform_fit": 4,
+          "safety": 4,
+          "unsupported_claims": 4
+        }
+      }
+    ],
+    "escalateWhen": [
+      "any dimension scores below 3",
+      "reviewers disagree by more than 1 point",
+      "a native reviewer flags dialect or script mismatch",
+      "any unsafe or unsupported claim is not explicitly flagged"
+    ]
+  }
+}

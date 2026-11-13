@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+message=$(sed -n '1p' "$1")
+case "$message" in
+  chore\(|docs\(|feat\(|fix\(|refactor\(|test\(|build\(|ci\(|perf\(|revert\(*) exit 0 ;;
+  *)
+    echo "Commit subject must use a conventional prefix (for example: feat(api): add health endpoint)." >&2
+    exit 1
+    ;;
+esac

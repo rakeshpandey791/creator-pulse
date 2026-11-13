@@ -1,0 +1,165 @@
+name: CreatorPulse CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run quality gates
+        run: |
+          mkdir -p .ci-artifacts
+          npm run check 2>&1 | tee .ci-artifacts/quality.log
+          npm run test:language-eval 2>&1 | tee .ci-artifacts/language-evaluation.log
+          npm run qa04:review 2>&1 | tee .ci-artifacts/qa04-quality-review.log
+          npm run test:coverage 2>&1 | tee .ci-artifacts/coverage.log
+          npm run build 2>&1 | tee .ci-artifacts/build.log
+      - name: Upload quality and build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-results
+          path: |
+            .ci-artifacts
+            coverage
+          retention-days: 14
+
+  security:
+    name: Security and secrets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run secret and dependency scans
+        run: |
+          mkdir -p .ci-artifacts
+          npm run check:secrets 2>&1 | tee .ci-artifacts/secrets.log
+          npm audit --omit=dev --audit-level=critical 2>&1 | tee .ci-artifacts/npm-audit.log
+      - name: Upload security results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-results
+          path: .ci-artifacts
+          retention-days: 14
+
+  compose:
+    name: Compose and migration validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate Compose and migration entry points
+        run: |
+          mkdir -p .ci-artifacts
+          docker compose config --quiet 2>&1 | tee .ci-artifacts/compose-config.log
+          npm run test:compose 2>&1 | tee .ci-artifacts/compose-smoke.log
+          npm run test:db 2>&1 | tee .ci-artifacts/database-integrity.log
+      - name: Build service image
+        run: docker compose build 2>&1 | tee .ci-artifacts/container-build.log
+      - name: Stop Compose services
+        if: always()
+        run: docker compose down -v
+      - name: Upload Compose results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compose-results
+          path: .ci-artifacts
+          retention-days: 14
+
+  performance:
+    name: Performance, resilience and cost baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run QA-03 deterministic baseline
+        run: |
+          mkdir -p .ci-artifacts
+          npm run test:qa03 2>&1 | tee .ci-artifacts/qa03-tests.log
+          npm run qa03:baseline 2>&1 | tee .ci-artifacts/qa03-baseline.log
+      - name: Upload QA-03 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa03-performance-results
+          path: .ci-artifacts
+          retention-days: 14
+
+  release:
+    name: Container release smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/v1
+      CORS_ORIGINS: http://localhost:3000
+      AUTH_SECRET: ci-release-only-secret
+      PASSWORD_RESET_MAIL_WEBHOOK_URL: https://mail.example.test/password-reset
+      MONGODB_URI: mongodb://mongodb:27017/creatorpulse
+      REDIS_URL: redis://redis:6379
+      PROVIDER_MODE: mock
+      GEMINI_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Prepare release evidence directory
+        run: mkdir -p .ci-artifacts
+      - name: Validate release configuration
+        run: |
+          npm run test:release 2>&1 | tee .ci-artifacts/release-config.log
+          npm run test:rel02 2>&1 | tee .ci-artifacts/rel02-runbook.log
+          npm run test:rel03 2>&1 | tee .ci-artifacts/rel03-readiness-check.log
+      - name: Build and start staging stack
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d --build --wait 2>&1 | tee .ci-artifacts/release-start.log
+          curl --fail --retry 10 --retry-delay 2 http://localhost:3001/v1/health | tee .ci-artifacts/release-health.json
+      - name: Roll back staging stack
+        if: always()
+        run: |
+          mkdir -p .ci-artifacts
+          docker compose -f docker-compose.yml -f docker-compose.staging.yml down -v 2>&1 | tee .ci-artifacts/release-rollback.log
+      - name: Upload release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-results
+          path: .ci-artifacts
+          retention-days: 14

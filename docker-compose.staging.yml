@@ -1,0 +1,45 @@
+name: creatorpulse-staging
+
+services:
+  web:
+    build:
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?NEXT_PUBLIC_API_URL is required}
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?NEXT_PUBLIC_API_URL is required}
+
+  api:
+    environment:
+      NODE_ENV: production
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET is required}
+      PASSWORD_RESET_MAIL_WEBHOOK_URL: ${PASSWORD_RESET_MAIL_WEBHOOK_URL:?PASSWORD_RESET_MAIL_WEBHOOK_URL is required}
+      CORS_ORIGINS: ${CORS_ORIGINS:?CORS_ORIGINS is required}
+      MONGODB_URI: ${MONGODB_URI:?MONGODB_URI is required}
+      MONGODB_DB: ${MONGODB_DB:-creatorpulse}
+      REDIS_URL: ${REDIS_URL:?REDIS_URL is required}
+      PROVIDER_MODE: ${PROVIDER_MODE:-mock}
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      AI_PROVIDER: ${AI_PROVIDER:-fake}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-qwen/qwen3.8-27b}
+      AI_TIMEOUT_MS: ${AI_TIMEOUT_MS:-20000}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+
+  worker:
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: ${MONGODB_URI:?MONGODB_URI is required}
+      MONGODB_DB: ${MONGODB_DB:-creatorpulse}
+      REDIS_URL: ${REDIS_URL:?REDIS_URL is required}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-1}
+      GENERATION_WORKER_CONCURRENCY: ${GENERATION_WORKER_CONCURRENCY:-2}
+      PROVIDER_MODE: ${PROVIDER_MODE:-mock}
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      AI_PROVIDER: ${AI_PROVIDER:-fake}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-qwen/qwen3.8-27b}
+      AI_TIMEOUT_MS: ${AI_TIMEOUT_MS:-20000}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}

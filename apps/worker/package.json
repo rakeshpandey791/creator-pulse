@@ -1,0 +1,20 @@
+{
+  "name": "@creator-pulse/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=../../.env ../../node_modules/tsx/dist/cli.mjs watch src/main.ts",
+    "start": "node --env-file-if-exists=../../.env dist/main.js",
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@creator-pulse/ai": "0.1.0",
+    "@creator-pulse/contracts": "0.1.0",
+    "bullmq": "^5.81.5",
+    "mongodb": "^6.22.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}

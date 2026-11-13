@@ -1,0 +1,148 @@
+name: creatorpulse
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001/v1}
+    command: ["npm", "run", "start", "--workspace", "@creator-pulse/web"]
+    environment:
+      NODE_ENV: production
+      WEB_PORT: 3000
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001/v1}
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://127.0.0.1:3000/",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    command: ["npm", "run", "start", "--workspace", "@creator-pulse/api"]
+    environment:
+      NODE_ENV: production
+      API_HOST: 0.0.0.0
+      API_PORT: 3001
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      AUTH_SECRET: ${AUTH_SECRET:-local-compose-secret-not-for-production}
+      MONGODB_URI: mongodb://mongodb:27017/creatorpulse
+      REDIS_URL: redis://redis:6379
+      PROVIDER_MODE: ${PROVIDER_MODE:-mock}
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      AI_PROVIDER: ${AI_PROVIDER:-fake}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-qwen/qwen3.8-27b}
+      AI_TIMEOUT_MS: ${AI_TIMEOUT_MS:-20000}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    ports:
+      - "${API_PORT:-3001}:3001"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://127.0.0.1:3001/v1/health",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    command: ["npm", "run", "start", "--workspace", "@creator-pulse/worker"]
+    environment:
+      NODE_ENV: production
+      WORKER_PORT: 3002
+      MONGODB_URI: mongodb://mongodb:27017/creatorpulse
+      REDIS_URL: redis://redis:6379
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-1}
+      GENERATION_WORKER_CONCURRENCY: ${GENERATION_WORKER_CONCURRENCY:-2}
+      PROVIDER_MODE: ${PROVIDER_MODE:-mock}
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      AI_PROVIDER: ${AI_PROVIDER:-fake}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-qwen/qwen3.8-27b}
+      AI_TIMEOUT_MS: ${AI_TIMEOUT_MS:-20000}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "test", "-f", "/tmp/creator-pulse-worker-ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:8.0
+    environment:
+      MONGO_INITDB_DATABASE: creatorpulse
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - creatorpulse-mongodb-data:/data/db
+      - ./database:/opt/database:ro
+      - ./docs/database:/opt/docs/database:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - creatorpulse-redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  creatorpulse-mongodb-data:
+  creatorpulse-redis-data:

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.next/
+.next-dev/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+playwright-report/
+test-results/
+.ci-artifacts/
+.backups/
